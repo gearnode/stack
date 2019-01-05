@@ -1,0 +1,81 @@
+# Copyright 2019 Bryan Frimin.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: '3.2'
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE_TAG}
+    restart:
+      on-failure
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
+
+  mysql:
+    image: ${MYSQL_IMAGE_TAG}
+    restart:
+      on-failure
+    ports:
+      - target: 3306
+        published: 3306
+        protocol: tcp
+        mode: host
+
+  elasticsearch:
+    image: ${ELASTICSEARCH_IMAGE_TAG}
+    restart:
+      on-failure
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+
+  zookeeper:
+    image: ${ZOOKEEPER_IMAGE_TAG}
+    restart:
+      on-failure
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+        mode: host
+  kafka:
+    image: ${KAFKA_IMAGE_TAG}
+    restart:
+      on-failure
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    ports:
+      - target: 9092
+        published: 9092
+        protocol: tcp
+        mode: host
+
+  redis:
+    image: ${REDIS_IMAGE_TAG}
+    restart:
+      on-failure
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
